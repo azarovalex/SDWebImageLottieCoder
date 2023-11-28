@@ -260,14 +260,10 @@ static NSString *SDCalculateMD5(NSString *input) {
         if (scaleFactor != nil) {
             scale = MAX([scaleFactor doubleValue], 1);
         }
-        CGSize thumbnailSize = CGSizeZero;
-        NSValue *thumbnailSizeValue = options[SDImageCoderDecodeThumbnailPixelSize];
-        if (thumbnailSizeValue != nil) {
-    #if SD_MAC
-            thumbnailSize = thumbnailSizeValue.sizeValue;
-    #else
-            thumbnailSize = thumbnailSizeValue.CGSizeValue;
-    #endif
+        CGSize overrideSize = CGSizeZero;
+        NSValue *overrideSizeValue = options[SDImageCoderDecodeThumbnailPixelSize];
+        if (overrideSizeValue != nil) {
+            overrideSize = overrideSizeValue.CGSizeValue;
         }
         BOOL preserveAspectRatio = YES;
         NSNumber *preserveAspectRatioValue = options[SDImageCoderDecodePreserveAspectRatio];
@@ -275,9 +271,8 @@ static NSString *SDCalculateMD5(NSString *input) {
             preserveAspectRatio = preserveAspectRatioValue.boolValue;
         }
         // Calculate the thumbnail size
-        CGSize scaledSize = SDCalculateThumbnailSize(CGSizeMake(width, height), preserveAspectRatio, thumbnailSize);
-        width = scaledSize.width;
-        height = scaledSize.height;
+        width = overrideSize.width;
+        height = overrideSize.height;
         _scale = scale;
         _width = width;
         _height = height;
